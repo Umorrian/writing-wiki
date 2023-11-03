@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 
+	_ "arnesteen.de/writing-wiki/migrations"
 	sqlg "arnesteen.de/writing-wiki/sqlite_gen"
 	tmpl "arnesteen.de/writing-wiki/templates"
 )
