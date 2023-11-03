@@ -70,8 +70,8 @@ func get_article(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 	article := <-result
 
-	component := tmpl.TArticle(article)
-	component.Render(r.Context(), w)
+	content := tmpl.TArticle(article)
+	tmpl.TLayout("Here: "+article.Name, content).Render(r.Context(), w)
 }
 
 func get_article_list(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -87,8 +87,8 @@ func get_article_list(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 	}
 	articles := <-result
 
-	component := tmpl.TArticlesList(articles)
-	component.Render(r.Context(), w)
+	content := tmpl.TArticlesList(articles)
+	tmpl.TLayout("Coolest Title", content).Render(r.Context(), w)
 }
 
 func middleware(n httprouter.Handle) httprouter.Handle {
