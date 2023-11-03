@@ -4,12 +4,10 @@
 
 package sqlite_gen
 
-import (
-	"database/sql"
-)
+import ()
 
-type Author struct {
-	ID   int64
-	Name string
-	Bio  sql.NullString
+type Article struct {
+	ID      int64
+	Name    string
+	Content string
 }

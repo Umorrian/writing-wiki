@@ -7,67 +7,51 @@ package sqlite_gen
 
 import (
 	"context"
-	"database/sql"
 )
 
-const createAuthor = `-- name: CreateAuthor :one
-INSERT INTO authors (
-    name, bio
-) VALUES (
-             ?, ?
-         )
-    RETURNING id, name, bio
+const createArticle = `-- name: CreateArticle :one
+INSERT INTO articles (
+name, content
+) VALUES (?, ?)
+RETURNING id, name, content
 `
 
-type CreateAuthorParams struct {
-	Name string
-	Bio  sql.NullString
+type CreateArticleParams struct {
+	Name    string
+	Content string
 }
 
-func (q *Queries) CreateAuthor(ctx context.Context, arg CreateAuthorParams) (Author, error) {
-	row := q.db.QueryRowContext(ctx, createAuthor, arg.Name, arg.Bio)
-	var i Author
-	err := row.Scan(&i.ID, &i.Name, &i.Bio)
+func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (Article, error) {
+	row := q.db.QueryRowContext(ctx, createArticle, arg.Name, arg.Content)
+	var i Article
+	err := row.Scan(&i.ID, &i.Name, &i.Content)
 	return i, err
 }
 
-const deleteAuthor = `-- name: DeleteAuthor :exec
-DELETE FROM authors
+const deleteArticle = `-- name: DeleteArticle :exec
+DELETE FROM articles
 WHERE id = ?
 `
 
-func (q *Queries) DeleteAuthor(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteAuthor, id)
+func (q *Queries) DeleteArticle(ctx context.Context, id int64) error {
+	_, err := q.db.ExecContext(ctx, deleteArticle, id)
 	return err
 }
 
-const getAuthor = `-- name: GetAuthor :one
-SELECT id, name, bio FROM authors
-WHERE id = ? LIMIT 1
+const getAllArticles = `-- name: GetAllArticles :many
+SELECT id, name, content FROM articles
 `
 
-func (q *Queries) GetAuthor(ctx context.Context, id int64) (Author, error) {
-	row := q.db.QueryRowContext(ctx, getAuthor, id)
-	var i Author
-	err := row.Scan(&i.ID, &i.Name, &i.Bio)
-	return i, err
-}
-
-const listAuthors = `-- name: ListAuthors :many
-SELECT id, name, bio FROM authors
-ORDER BY name
-`
-
-func (q *Queries) ListAuthors(ctx context.Context) ([]Author, error) {
-	rows, err := q.db.QueryContext(ctx, listAuthors)
+func (q *Queries) GetAllArticles(ctx context.Context) ([]Article, error) {
+	rows, err := q.db.QueryContext(ctx, getAllArticles)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Author
+	var items []Article
 	for rows.Next() {
-		var i Author
-		if err := rows.Scan(&i.ID, &i.Name, &i.Bio); err != nil {
+		var i Article
+		if err := rows.Scan(&i.ID, &i.Name, &i.Content); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -81,20 +65,44 @@ func (q *Queries) ListAuthors(ctx context.Context) ([]Author, error) {
 	return items, nil
 }
 
-const updateAuthor = `-- name: UpdateAuthor :exec
-UPDATE authors
+const getArticle = `-- name: GetArticle :one
+SELECT id, name, content FROM articles
+WHERE id = ? LIMIT 1
+`
+
+func (q *Queries) GetArticle(ctx context.Context, id int64) (Article, error) {
+	row := q.db.QueryRowContext(ctx, getArticle, id)
+	var i Article
+	err := row.Scan(&i.ID, &i.Name, &i.Content)
+	return i, err
+}
+
+const getArticleByName = `-- name: GetArticleByName :one
+SELECT id, name, content FROM articles
+WHERE name = ? LIMIT 1
+`
+
+func (q *Queries) GetArticleByName(ctx context.Context, name string) (Article, error) {
+	row := q.db.QueryRowContext(ctx, getArticleByName, name)
+	var i Article
+	err := row.Scan(&i.ID, &i.Name, &i.Content)
+	return i, err
+}
+
+const updateArticle = `-- name: UpdateArticle :exec
+UPDATE articles
 set name = ?,
-    bio = ?
+    content = ?
 WHERE id = ?
 `
 
-type UpdateAuthorParams struct {
-	Name string
-	Bio  sql.NullString
-	ID   int64
+type UpdateArticleParams struct {
+	Name    string
+	Content string
+	ID      int64
 }
 
-func (q *Queries) UpdateAuthor(ctx context.Context, arg UpdateAuthorParams) error {
-	_, err := q.db.ExecContext(ctx, updateAuthor, arg.Name, arg.Bio, arg.ID)
+func (q *Queries) UpdateArticle(ctx context.Context, arg UpdateArticleParams) error {
+	_, err := q.db.ExecContext(ctx, updateArticle, arg.Name, arg.Content, arg.ID)
 	return err
 }
