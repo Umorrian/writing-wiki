@@ -3,30 +3,11 @@
 //   sqlc v1.23.0
 // source: query.sql
 
-package sqlite_gen
+package gen
 
 import (
 	"context"
 )
-
-const createArticle = `-- name: CreateArticle :one
-INSERT INTO articles (
-name, content
-) VALUES (?, ?)
-RETURNING id, name, content
-`
-
-type CreateArticleParams struct {
-	Name    string
-	Content string
-}
-
-func (q *Queries) CreateArticle(ctx context.Context, arg CreateArticleParams) (Article, error) {
-	row := q.db.QueryRowContext(ctx, createArticle, arg.Name, arg.Content)
-	var i Article
-	err := row.Scan(&i.ID, &i.Name, &i.Content)
-	return i, err
-}
 
 const deleteArticle = `-- name: DeleteArticle :exec
 DELETE FROM articles
@@ -38,12 +19,31 @@ func (q *Queries) DeleteArticle(ctx context.Context, id int64) error {
 	return err
 }
 
-const getAllArticles = `-- name: GetAllArticles :many
+const insertArticle = `-- name: InsertArticle :one
+INSERT INTO articles (
+name, content
+) VALUES (?, ?)
+RETURNING id, name, content
+`
+
+type InsertArticleParams struct {
+	Name    string
+	Content string
+}
+
+func (q *Queries) InsertArticle(ctx context.Context, arg InsertArticleParams) (Article, error) {
+	row := q.db.QueryRowContext(ctx, insertArticle, arg.Name, arg.Content)
+	var i Article
+	err := row.Scan(&i.ID, &i.Name, &i.Content)
+	return i, err
+}
+
+const selectAllArticles = `-- name: SelectAllArticles :many
 SELECT id, name, content FROM articles
 `
 
-func (q *Queries) GetAllArticles(ctx context.Context) ([]Article, error) {
-	rows, err := q.db.QueryContext(ctx, getAllArticles)
+func (q *Queries) SelectAllArticles(ctx context.Context) ([]Article, error) {
+	rows, err := q.db.QueryContext(ctx, selectAllArticles)
 	if err != nil {
 		return nil, err
 	}
@@ -65,25 +65,25 @@ func (q *Queries) GetAllArticles(ctx context.Context) ([]Article, error) {
 	return items, nil
 }
 
-const getArticle = `-- name: GetArticle :one
+const selectArticle = `-- name: SelectArticle :one
 SELECT id, name, content FROM articles
 WHERE id = ? LIMIT 1
 `
 
-func (q *Queries) GetArticle(ctx context.Context, id int64) (Article, error) {
-	row := q.db.QueryRowContext(ctx, getArticle, id)
+func (q *Queries) SelectArticle(ctx context.Context, id int64) (Article, error) {
+	row := q.db.QueryRowContext(ctx, selectArticle, id)
 	var i Article
 	err := row.Scan(&i.ID, &i.Name, &i.Content)
 	return i, err
 }
 
-const getArticleByName = `-- name: GetArticleByName :one
+const selectArticleByName = `-- name: GetArticleByName :one
 SELECT id, name, content FROM articles
 WHERE name = ? LIMIT 1
 `
 
-func (q *Queries) GetArticleByName(ctx context.Context, name string) (Article, error) {
-	row := q.db.QueryRowContext(ctx, getArticleByName, name)
+func (q *Queries) SelectArticleByName(ctx context.Context, name string) (Article, error) {
+	row := q.db.QueryRowContext(ctx, selectArticleByName, name)
 	var i Article
 	err := row.Scan(&i.ID, &i.Name, &i.Content)
 	return i, err

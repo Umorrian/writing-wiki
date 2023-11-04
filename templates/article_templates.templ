@@ -1,16 +1,16 @@
 package templates
 
-import "arnesteen.de/writing-wiki/sqlite_gen"
+import sqlg "arnesteen.de/writing-wiki/queries/gen"
 
-templ TArticle(article sqlite_gen.Article) {
+templ TArticle(article *sqlg.Article) {
   <h3>{article.Name}</h3>
   <p>{article.Content}</p>
 }
 
-templ TArticlesList(articles []sqlite_gen.Article) {
+templ TArticlesList(articles []sqlg.Article) {
   <ul>
   for _, article := range articles {
-    <li><a href={templ.SafeURL("http://localhost:8080/articles/"+article.Name) }>{article.Name}</a></li>
+    <li><a href={templ.SafeURL("articles/"+article.Name) }>{article.Name}</a></li>
   }
   </ul>
 }

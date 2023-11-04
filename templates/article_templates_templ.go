@@ -10,9 +10,9 @@ import "context"
 import "io"
 import "bytes"
 
-import "arnesteen.de/writing-wiki/sqlite_gen"
+import sqlg "arnesteen.de/writing-wiki/queries/gen"
 
-func TArticle(article sqlite_gen.Article) templ.Component {
+func TArticle(article *sqlg.Article) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -54,7 +54,7 @@ func TArticle(article sqlite_gen.Article) templ.Component {
 	})
 }
 
-func TArticlesList(articles []sqlite_gen.Article) templ.Component {
+func TArticlesList(articles []sqlg.Article) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -76,7 +76,7 @@ func TArticlesList(articles []sqlite_gen.Article) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 templ.SafeURL = templ.SafeURL("http://localhost:8080/articles/" + article.Name)
+			var templ_7745c5c3_Var5 templ.SafeURL = templ.SafeURL("articles/" + article.Name)
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var5)))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

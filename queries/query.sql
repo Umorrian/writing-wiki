@@ -1,15 +1,15 @@
--- name: GetArticle :one
+-- name: SelectArticle :one
 SELECT * FROM articles
 WHERE id = ? LIMIT 1;
 
--- name: GetArticleByName :one
+-- name: SelectArticleByName :one
 SELECT * FROM articles
 WHERE name = ? LIMIT 1;
 
--- name: GetAllArticles :many
+-- name: SelectAllArticles :many
 SELECT * FROM articles;
 
--- name: CreateArticle :one
+-- name: InsertArticle :one
 INSERT INTO articles (
 name, content
 ) VALUES (?, ?)
