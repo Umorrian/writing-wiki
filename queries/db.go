@@ -8,7 +8,6 @@ import (
 	"embed"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pressly/goose/v3"
-	"log"
 	"os"
 )
 
@@ -34,13 +33,17 @@ func NewDB(cfg *config.Config) *DB {
 }
 
 func (db *DB) sqlWarden() {
-	f, err := os.OpenFile(db.Cfg.VolumePath+"db.sqlite", os.O_RDONLY|os.O_CREATE, 0666)
-	f.Close()
-
-	conn, err := sql.Open("sqlite3", "file:"+db.Cfg.VolumePath+"db.sqlite")
+	f, err := os.OpenFile(db.Cfg.VolumePath+"/db.sqlite", os.O_RDONLY|os.O_CREATE, 0666)
 	if err != nil {
-		log.Printf("Error opening sqlite db %v", err)
-		return
+		panic(err)
+	}
+	if f.Close() != nil {
+		panic(err)
+	}
+
+	conn, err := sql.Open("sqlite3", "file:"+db.Cfg.VolumePath+"/db.sqlite")
+	if err != nil {
+		panic(err)
 	}
 
 	goose.SetBaseFS(embedMigrations)

@@ -10,7 +10,7 @@ templ TArticle(article *sqlg.Article) {
 templ TArticlesList(articles []sqlg.Article) {
   <ul>
   for _, article := range articles {
-    <li><a href={templ.SafeURL("articles/"+article.Name) }>{article.Name}</a></li>
+    <li><a href={templ.SafeURL("/articles/"+article.Name) }>{article.Name}</a></li>
   }
   </ul>
 }

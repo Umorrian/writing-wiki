@@ -21,6 +21,7 @@ func main() {
 	router.GET("/", handlers.Index)
 	router.GET("/articles/:name", app.Middleware(app.GetArticle))
 	router.GET("/articles", app.Middleware(app.GetArticleList))
+	router.ServeFiles("/static/*filepath", http.Dir(cfg.StaticPath))
 
 	log.Fatal(http.ListenAndServe(cfg.GetHostWithPort(), router))
 }

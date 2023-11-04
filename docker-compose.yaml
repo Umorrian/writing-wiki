@@ -1,0 +1,10 @@
+services:
+  writingwiki:
+    build: .
+    ports:
+      - "8123:8123"
+    volumes:
+      - db-data:/dbdata
+
+volumes:
+  db-data:

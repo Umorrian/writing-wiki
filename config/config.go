@@ -9,7 +9,8 @@ import (
 type Config struct {
 	Hostname   string `env:"HOSTNAME" envDefault:"localhost"`
 	Port       uint16 `env:"PORT" envDefault:"8123"`
-	VolumePath string `env:"VOLUME_PATH,expand" envDefault:"volume/"`
+	VolumePath string `env:"VOLUME_PATH,expand" envDefault:"volume"`
+	StaticPath string `env:"STATIC_PATH,expand" endDefault:"../static"`
 }
 
 func LoadConfig() *Config {
