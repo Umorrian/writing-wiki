@@ -2,15 +2,15 @@ package templates
 
 import sqlg "arnesteen.de/writing-wiki/queries/gen"
 
-templ TArticle(article *sqlg.Article) {
-  <h3>{article.Name}</h3>
-  <p>{article.Content}</p>
+templ TArticle(article *sqlg.Article, article_text *sqlg.ArticleText) {
+  <h3>{article.Title}</h3>
+  <p>{article_text.Content}</p>
 }
 
 templ TArticlesList(articles []sqlg.Article) {
   <ul>
   for _, article := range articles {
-    <li><a href={templ.SafeURL("/articles/"+article.Name) }>{article.Name}</a></li>
+    <li><a href={templ.SafeURL("/articles/"+article.Title) }>{article.Title}</a></li>
   }
   </ul>
 }

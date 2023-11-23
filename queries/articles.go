@@ -19,15 +19,15 @@ func (db *DB) GetArticleList(ctx context.Context) []gen.Article {
 	return <-result
 }
 
-func (db *DB) GetArticleByName(ctx context.Context, name string) *gen.Article {
-	result := make(chan *gen.Article)
+func (db *DB) GetArticleByName(ctx context.Context, name string) *gen.SelectArticleByNameWithCurrentContentRow {
+	result := make(chan *gen.SelectArticleByNameWithCurrentContentRow)
 	db.WorkChannel <- func(queries *gen.Queries) {
-		fetchedArticle, err := queries.SelectArticleByName(ctx, name)
+		row, err := queries.SelectArticleByNameWithCurrentContent(ctx, name)
 		if err != nil {
 			log.Printf("Error fetching data")
 			return
 		}
-		result <- &fetchedArticle
+		result <- &row
 	}
 	return <-result
 }
