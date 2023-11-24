@@ -10,9 +10,9 @@ import "context"
 import "io"
 import "bytes"
 
-import sqlg "arnesteen.de/writing-wiki/queries/gen"
+import m "arnesteen.de/writing-wiki/model"
 
-func TArticle(article *sqlg.Article, article_text *sqlg.ArticleText) templ.Component {
+func TArticle(article *m.Article, article_text *m.ArticleText) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -54,7 +54,7 @@ func TArticle(article *sqlg.Article, article_text *sqlg.ArticleText) templ.Compo
 	})
 }
 
-func TArticlesList(articles []sqlg.Article) templ.Component {
+func TArticlesList(articles []m.Article) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {

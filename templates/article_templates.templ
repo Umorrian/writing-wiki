@@ -1,13 +1,13 @@
 package templates
 
-import sqlg "arnesteen.de/writing-wiki/queries/gen"
+import m "arnesteen.de/writing-wiki/model"
 
-templ TArticle(article *sqlg.Article, article_text *sqlg.ArticleText) {
+templ TArticle(article *m.Article, article_text *m.ArticleText) {
   <h3>{article.Title}</h3>
   <p>{article_text.Content}</p>
 }
 
-templ TArticlesList(articles []sqlg.Article) {
+templ TArticlesList(articles []m.Article) {
   <ul>
   for _, article := range articles {
     <li><a href={templ.SafeURL("/articles/"+article.Title) }>{article.Title}</a></li>

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"arnesteen.de/writing-wiki/config"
-	"arnesteen.de/writing-wiki/queries"
+	"arnesteen.de/writing-wiki/model"
 	"fmt"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -11,7 +11,7 @@ import (
 
 type Application struct {
 	Cfg *config.Config
-	Db  *queries.DB
+	Db  *model.DB
 }
 
 func Index(w http.ResponseWriter, _ *http.Request) {

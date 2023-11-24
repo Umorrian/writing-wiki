@@ -3,7 +3,7 @@ package main
 import (
 	"arnesteen.de/writing-wiki/config"
 	"arnesteen.de/writing-wiki/handlers"
-	"arnesteen.de/writing-wiki/queries"
+	"arnesteen.de/writing-wiki/model"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"log"
@@ -15,7 +15,7 @@ func main() {
 
 	app := handlers.Application{
 		Cfg: cfg,
-		Db:  queries.NewDB(cfg),
+		Db:  model.NewDB(cfg),
 	}
 
 	router := chi.NewRouter()

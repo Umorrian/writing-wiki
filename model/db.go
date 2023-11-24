@@ -1,11 +1,11 @@
-package queries
+package model
 
 import (
 	"arnesteen.de/writing-wiki/config"
-	sqlg "arnesteen.de/writing-wiki/queries/gen"
-	_ "arnesteen.de/writing-wiki/queries/migrations"
+	_ "arnesteen.de/writing-wiki/model/migrations"
 	"database/sql"
 	"embed"
+	"github.com/doug-martin/goqu/v9"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/pressly/goose/v3"
 	"os"
@@ -14,7 +14,7 @@ import (
 //go:embed migrations/*.sql
 var embedMigrations embed.FS
 
-type sqlWork func(queries *sqlg.Queries)
+type sqlWork func(sqldb *sql.DB, gqdb *goqu.Database)
 
 type DB struct {
 	WorkChannel chan sqlWork
@@ -41,10 +41,11 @@ func (db *DB) sqlWarden() {
 		panic(err)
 	}
 
-	conn, err := sql.Open("sqlite3", "file:"+db.Cfg.VolumePath+"/db.sqlite")
+	sqldb, err := sql.Open("sqlite3", "file:"+db.Cfg.VolumePath+"/db.sqlite")
 	if err != nil {
 		panic(err)
 	}
+	defer sqldb.Close()
 
 	goose.SetBaseFS(embedMigrations)
 
@@ -52,14 +53,15 @@ func (db *DB) sqlWarden() {
 		panic(err)
 	}
 
-	if err := goose.Up(conn, "migrations"); err != nil {
+	if err := goose.Up(sqldb, "migrations"); err != nil {
 		panic(err)
 	}
 
-	queries := sqlg.New(conn)
+	sqlDialect := goqu.Dialect("sqlite3")
+	gqdb := sqlDialect.DB(sqldb)
 
 	for {
 		work := <-db.WorkChannel
-		work(queries)
+		work(sqldb, gqdb)
 	}
 }

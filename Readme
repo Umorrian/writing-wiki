@@ -1,4 +1,1 @@
 templ generate
-
-sqlc compile
-sqlc generate

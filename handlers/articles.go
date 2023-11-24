@@ -8,13 +8,13 @@ import (
 
 func (app *Application) GetArticle(w http.ResponseWriter, r *http.Request) {
 	name := chi.URLParam(r, "name")
-	awc := app.Db.GetArticleByName(r.Context(), name)
-	content := tmpl.TArticle(&awc.Article, &awc.ArticleText)
-	tmpl.TLayout("Here: "+awc.Article.Title, content).Render(r.Context(), w)
+	article, _ := app.Db.GetArticleByName(name)
+	content := tmpl.TArticle(article, article.CurrentText)
+	tmpl.TLayout("Here: "+article.Title, content).Render(r.Context(), w)
 }
 
 func (app *Application) GetArticleList(w http.ResponseWriter, r *http.Request) {
-	articles := app.Db.GetArticleList(r.Context())
+	articles := app.Db.GetArticleList()
 	content := tmpl.TArticlesList(articles)
 	tmpl.TLayout("Title to come", content).Render(r.Context(), w)
 }
